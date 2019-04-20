@@ -6,12 +6,15 @@
 ./
 │  main.py
 │  main_keyword_list.txt
+|  README.md
 │  中国地名大全.txt
 │  中国姓氏大全.txt
 │
 ├─file2txt
 │  │  read.py
 │  │  __init__.py
+│
+├─resume
 ```
 
 
