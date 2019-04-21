@@ -4,8 +4,7 @@
 import re
 import os
 import json
-from file2txt.read import read_doc, read_docx, read_txt
-from file2txt.read import read_pdf
+from file2txt.read import read_doc, read_docx, read_txt, read_pdf
 
 
 class Regulation_parsing_resume:
@@ -30,7 +29,7 @@ class Regulation_parsing_resume:
         a3 = [i for i in a if i[0] == '教育背景']
         a4 = [i for i in a if i[0] == '求职意向']
         a5 = [i for i in a if i[0] == '工作/实习经历与项目经验']
-        a6 = [i for i in a if i[0] == '技能、证书与荣誉']
+        a6 = [i for i in a if i[0] == '技能证书与荣誉']
         a7 = [i for i in a if i[0] == '自我评价']
         a8 = [i for i in a if i[0] == '校园经历']
 
@@ -75,7 +74,7 @@ class Regulation_parsing_resume:
             if a1:
                 b = { i[2]:i[3] for i in a1 }
                 d.update({a1[0][0]:b})
-        print(d)
+        # print(d)
         return d
 
     def print_more_resumes_content(self):
@@ -85,129 +84,18 @@ class Regulation_parsing_resume:
         :return: None
         '''
         for root, dirs, files in os.walk('./resume'):
-            file_list = [i for i in files if not i.endswith('.doc')]
-            file_list = [i for i in file_list if not i.startswith('~$')]
+            file_list = [i for i in files if not i.startswith('~$')]
 
         for file in file_list:
             print('解析的简历为：{resume_name}'.format(resume_name=file))
             self.content_dict(file)
             print('==================================================='*3)
 
-    def demo_example(self):
-        '''
-        演示本类下的每个函数
-        :return: None
-        '''
-        demo_content = \
-        '''
-        *************************************************************
-            0. exit
-            1. dict_value_find_key(self, value: str) -> str
-            2. resume_total_keywords_str_to_dict(self)
-            3. change_resume_str(self, resume_fullname: str)
-            4. parse_resume_total_keywords_dict(self)
-            5. parse_resume_keyword(self)
-            6. parse_resume_content(self)
-            7. find_emails_phone_age_and_work_experience(self, resume)
-            8. check_content(self)
-            9. print_one_resume_content(self)
-            10. print_more_resumes_content(self)
-        *************************************************************
-        '''
-        while True:
-            print(demo_content)
-            func_num = input('请输入要演示的函数序号：')
-
-            if func_num == '1':
-                print(help(self.dict_value_find_key))
-                print('----------------------------------------------------------------')
-                s = input('请输入要查找的字典的值：')
-                result_str = self.dict_value_find_key(s)
-                print('它对应的字典的键为：{result}'.format(result=result_str))
-
-            elif func_num == '2':
-                print(help(self.resume_total_keywords_str_to_dict))
-                print('----------------------------------------------------------------')
-                result_dict = self.resume_total_keywords_str_to_dict()
-                print('main2_keyword_list.txt 的内容转换成字典格式输出如下：\n')
-                print(result_dict)
-
-            elif func_num == '3':
-                print(help(self.change_resume_str))
-                print('----------------------------------------------------------------')
-                s = input('请输入简历的全文件名( 注意中英文，eg: 3994.txt )：')
-                result_str = self.change_resume_str(s)
-                print('输出函数结果为：\n')
-                print(result_str)
-
-            elif func_num == '4':
-                print(help(self.parse_resume_total_keywords_dict))
-                print('----------------------------------------------------------------')
-                result_generator = self.parse_resume_total_keywords_dict()
-                print('输出函数结果为：\n')
-                for result in result_generator:
-                    print(result)
-
-            elif func_num == '5':
-                print(help(self.parse_resume_keyword))
-                print('----------------------------------------------------------------')
-                s = input('请输入简历的全文件名( 注意中英文，eg: 3994.txt )：')
-                result_generator = self.parse_resume_keyword(s)
-                print('输出函数结果为：\n')
-                for result in result_generator:
-                    print(result)
-
-            elif func_num == '6':
-                print(help(self.parse_resume_content))
-                print('----------------------------------------------------------------')
-                s = input('请输入简历的全文件名( 注意中英文，eg: 3994.txt )：')
-                result_generator = self.parse_resume_content(s)
-                print('输出函数结果为：\n')
-                for result in result_generator:
-                    print(result)
-
-            elif func_num == '7':
-                print(help(self.find_emails_phone_age_and_work_experience))
-                print('----------------------------------------------------------------')
-                s = input('请输入简历的全文件名( 注意中英文，eg: 3994.txt )：')
-                result_tuple = self.find_emails_phone_age_and_work_experience(s)
-                print('输出函数结果为：\n')
-                for result in result_tuple:
-                    print(result)
-
-            elif func_num == '8':
-                print(help(self.check_content))
-                print('----------------------------------------------------------------')
-                s = input('请输入简历的全文件名( 注意中英文，eg: 3994.txt )：')
-                result_generator = self.check_content(s)
-                print('输出函数结果为：\n')
-                for result in result_generator:
-                    print(result)
-
-            elif func_num == '9':
-                print(help(self.print_one_resume_content))
-                print('----------------------------------------------------------------')
-                s = input('请输入简历的全文件名( 注意中英文，eg: 3994.txt )：')
-                print('输出函数结果为：\n')
-                self.print_one_resume_content(s)
-
-            elif func_num == '10':
-                print(help(self.print_more_resumes_content))
-                print('----------------------------------------------------------------')
-                print('输出函数结果为：\n')
-                self.print_more_resumes_content()
-
-            elif func_num == '0':
-                break
-
-            else:
-                pass
-
     class Roughly_parsing:
         def __init__(self):
             self.total_keywords = ['个人基本信息', '联系方式', '教育背景',
                                    '求职意向', '工作/实习经历与项目经验',
-                                   '技能、证书与荣誉', '自我评价', '校园经历']
+                                   '技能证书与荣誉', '自我评价', '校园经历']
 
         def dict_value_find_key(self, value: str) -> str:
             '''
@@ -277,6 +165,8 @@ class Regulation_parsing_resume:
             # superset_keyword_json = json.loads(superset_keyword_str)
             # print(json.dumps(superset_keyword_json, indent=2, ensure_ascii=False))
 
+            superset_keyword_dict['个人基本信息'] = superset_keyword_dict.pop("")
+
             return superset_keyword_dict
 
         def change_resume_str(self, resume_fullname: str):
@@ -286,11 +176,13 @@ class Regulation_parsing_resume:
             :param resume_fullname: 简历的全文件名，例如参数为：'Python 爬虫高级工程师.txt'
             :return: str   修改替换后的简历文本字符串
             '''
-            # TODO: 还需加上 pdf 简历解析
             if resume_fullname.endswith('.txt'):
                 resume = read_txt('./resume/{}'.format(resume_fullname))
             elif resume_fullname.endswith('.doc'):
-                resume = read_doc('./resume/{}'.format(resume_fullname))
+                try:
+                    resume = read_doc('./resume/{}'.format(resume_fullname))
+                except subprocess.CalledProcessError as e:
+                    resume = ''
             elif resume_fullname.endswith('.docx'):
                 resume = read_docx('./resume/{}'.format(resume_fullname))
             elif resume_fullname.endswith('.pdf'):
@@ -306,10 +198,9 @@ class Regulation_parsing_resume:
                 mytext.append(i)
             resume = '\n'.join(mytext)
 
-            resume = re.sub('←', '', resume)
-            resume = re.sub('_', '', resume)
-            resume = re.sub('·', '', resume)
-            resume = re.sub('', '', resume)
+            pattern = '←|_|✓|·|||●|||||◆|■|丨|\|'
+            # pattern1 = '-'        # 2011-9 这种，还需考虑
+            resume = re.sub(pattern, '', resume)
 
             resume = re.sub('姓\s{,9}名', '姓名', resume)
             resume = re.sub('性\s{,9}别', '性别', resume)
@@ -318,12 +209,15 @@ class Regulation_parsing_resume:
             resume = re.sub('身\s{,9}高', '身高', resume)
             resume = re.sub('专\s{,9}业', '专业', resume)
             resume = re.sub('手\s{,9}机', '手机', resume)
+            resume = re.sub('手\s{,9}机\s{,9}号', '手机号', resume)
             resume = re.sub('民\s{,9}族', '民族', resume)
             resume = re.sub('电\s{,9}话', '电话', resume)
             resume = re.sub('邮\s{,9}箱', '邮箱', resume)
             resume = re.sub('邮\s{,9}编', '邮编', resume)
             resume = re.sub('住\s{,9}址', '住址', resume)
-            resume = re.sub('基本信息|个人资料', '', resume)
+            resume = re.sub('年\s{,9}龄', '年龄', resume)
+            resume = re.sub('基本信息|个人资料|个人信息', '', resume)
+            resume = re.sub('\[pic\]', '', resume)
 
             return resume
 
@@ -352,8 +246,8 @@ class Regulation_parsing_resume:
                 for key in keys[2]:
                     if re.finditer(key, resume):
                         for m in re.finditer(key, resume):
-                            if not re.match('[\u4e00-\u9fa5()]', resume[m.start() - 1]) and \
-                                    not re.match('[\u4e00-\u9fa5()]', resume[m.end()]):
+                            if not re.match('[\u4e00-\u9fa5()0-9a-zA-Z\/\\\]', resume[m.start() - 1]) and \
+                                    not re.match('[\u4e00-\u9fa5()0-9a-zA-Z\/\\\]', resume[m.end()]):
                                 yield (keys[0], keys[1], key, m.start(), len(key))
 
         def parse_resume_content(self, resume_fullname: str):
@@ -422,7 +316,7 @@ class Regulation_parsing_resume:
                         and all([re.match('[\u4e00-\u9fa5]', i) for i in content]):
                     name = content
                     # print('姓名：', content)
-                if content in toponymy:
+                if content in toponymy and not content.isdigit():
                     dwell_place = content
                     # print('居住地：', content)
 
@@ -448,7 +342,6 @@ class Regulation_parsing_resume:
                     replace_key_list_1.append(content[1])
                     if content[1] == '工作年限':
                         work_experience_result = content[3]
-            for content in contents:
                 if content[0] == '联系方式':
                     replace_key_list_2.append(content[1])
 
@@ -485,7 +378,7 @@ class Regulation_parsing_resume:
             if '：' in content:
                 b = re.split('\n', content)
                 for i in range(len(b)):
-                    if b[i].endswith('：'):
+                    if b[i].endswith('：') and len(b[i]) <= 2:   # 太不通用了，，暂留
                         if i + 1 <= len(b) - 1:
                             content2.append(''.join([b[i], b[i + 1]]))
             content2 = '\n'.join(content2)
@@ -494,21 +387,29 @@ class Regulation_parsing_resume:
             return content
 
         def process_content_time_segment(self, total_key_1, content: str):
-            pattern = '\d{4}/\d{1,2}[-~]{1,3}\d{4}/\d{1,2}|\d{4}.\d{1,2}[-~]{1,3}\d{4}.\d{1,2}|' \
+            # 匹配时间段 eg: 2013/7--2017/7
+            pattern_time = '\d{4}/\d{1,2}[-~]{1,3}\d{4}/\d{1,2}|\d{4}.\d{1,2}[-~]{1,3}\d{4}.\d{1,2}|' \
                       '\d{4}/\d{1,2}至今|\d{4}.\d{1,2}至今|\d{4}[-~]{1,3}\d{1,2}至今|' \
                       '\d{4}年\d{1,2}月[-~至到]{1,3}\d{4}年\d{1,2}月'
+            # 匹配数字序号 eg: ['一、', '三十五、', '3、']
+            # pattern2 = '\d{1,2}[\.、]|[一二三四五六七八九十零]{1,3}[\.、]'
 
             content3 = list()
-            if total_key_1 == '工作/实习经历与项目经验' or total_key_1 == '校园经历':
-                a = re.finditer(pattern, content)
-                content2 = [i.start() for i in a ]
-
-                for num, i in enumerate(content2):
-                    if len(content2) >= 2:
-                        if num == 0: content1 = content[0:content2[num+1]]
-                        elif num == len(content2) - 1: content1 = content[i:]
-                        else: content1 = content[content2[num-1]:i]
-                        content3.append(content1)
+            if total_key_1 == '工作/实习经历与项目经验' \
+                    or total_key_1 == '校园经历' \
+                    or total_key_1 == '工作内容':
+                a = re.finditer(pattern_time, content)
+                if list(a):
+                    content2 = [i.start() for i in a]
+                    for num, i in enumerate(content2):
+                        if len(content2) >= 2:
+                            if num == 0:
+                                content1 = content[0:content2[num + 1]]
+                            elif num == len(content2) - 1:
+                                content1 = content[i:]
+                            else:
+                                content1 = content[content2[num - 1]:i]
+                            content3.append(content1)
             content4 = '\n'.join(content3)
             content = content4 if content4 else content
 
@@ -544,7 +445,7 @@ class Regulation_parsing_resume:
 
         def process_content_start_with_keyword(self, content: str):
             content2 = ''
-            for i in ['实习经历', '证书', '自我评价']:
+            for i in ['实习经历', '证书', '自我评价', '项目经验', '个人评价']:
                 if content.startswith(i):
                     content2 = content[len(i):].lstrip()
                     break
@@ -557,6 +458,7 @@ class Regulation_parsing_resume:
            1) 处理提取的资料项 包含 '：' 的情况
            2) 处理 工作经历 等等，以时间段为分块显示
            3) 处理一些资料项 存在不好看的换行情况
+           4) 处理一些解析出来的开头为关键词（重复）的资料项
            :return:
            '''
             resume_content_generator = super().parse_resume_content(resume_fullname)
@@ -565,40 +467,15 @@ class Regulation_parsing_resume:
                 total_key_1, replace_key_1, resume_key_1, content = contents
                 if content:
                     content = self.process_content_colon(content)
-                    content = self.process_content_time_segment(total_key_1, content)
+                    # content = self.process_content_time_segment(total_key_1, content)
                     content = self.process_content_newline(content)
                     content = self.process_content_start_with_keyword(content)
                     yield  total_key_1, replace_key_1, resume_key_1, content
 
 
 if __name__ == '__main__':
-    # a = Regulation_parsing_resume.Detail_again_parsing()
-    # result = a.parse_resume_content('3994.docx')       # ERP技术开发求职.docx   3D设计求职
-    # for i in result:
-    #     print(i)
-    # print(result)
 
     a = Regulation_parsing_resume()
     result = a.print_more_resumes_content()
-    # for i in result:
-    #     print(i)
-
-
-    # java工程师.docx',  3994.txt',  研究生个人简历样本.doc'
-    # ~$3D设计求职.docx     ~$P技术开发求职.docx    ~$3994.docx
-
-    # 【输出界面：XXX院校 XX专业 学历层次  XX年XX月——XX年XX月 （学习内容、课程内容） 】
-    # 工作时间段：【XX年XX月——XX年XX月】
-    # 【输出界面：XXX公司 XX职位 （XX部门）学历层次  XX年XX月——XX年XX月 工作内容
-    # 	    XX项目  XX职能 		       XX年XX月——XX年XX月 项目内容 】
-
-
-
-
-
-
-
-
-
 
 
